@@ -1,0 +1,72 @@
+#!/bin/bash
+clear;
+echo "Instala Gerencidor que armazena senhas Linux."
+sudo apt-get install  sshpass -y;
+sudo apt-get install samba -y;
+sudo apt-get install libreoffice-gnome -y;
+sudo apt-get install boomaga -y;
+sudo apt-get install gwenview -y;
+sudo apt-get install remmina -y;
+sudo apt-get install -f;
+cd /home/$USER/Imagens;
+sudo wget -m -r -nd ftp://portalgeracao:GeracaoFTP.1212@187.45.240.15/public_html/manualLinux/fundo-2.jpg
+cd /usr/share/xfce4/backdrops/;
+sudo rm *;
+sudo cp /home/$USER/Imagens/fundo* .;
+cd /bin;
+sudo wget -m -r -nd ftp://portalgeracao:GeracaoFTP.1212@187.45.240.15/public_html/manualLinux/limpeza.sh;
+sudo chmod +x limpeza.sh;
+clear;
+sudo mkdir /opt/franz;
+cd /home/$USER/Downloads;
+sudo wget -m  -r  -nd ftp://portalgeracao:GeracaoFTP.1212@187.45.240.15/public_html/manualLinux/franz.tgz;
+sudo wget -m  -r  -nd ftp://portalgeracao:GeracaoFTP.1212@187.45.240.15/public_html/manualLinux/google-chrome-stable_current_amd64.deb;
+sudo wget -m  -r  -nd ftp://portalgeracao:GeracaoFTP.1212@187.45.240.15/public_html/manualLinux/jre-linux.tar.gz;
+sudo tar -vzxf /home/$USER/Downloads/franz.tgz -C /opt/franz/;
+sudo ln -sf /opt/franz/Franz /usr/bin/franz;
+echo -e '[Desktop Entry]\n Version=1.0\n Name=franz\n Exec=/opt/franz/Franz\n Icon=/opt/franz/resources/app.asar.unpacked/assets/franz.png\n Type=Application\n Categories=Application' | sudo tee /usr/share/applications/franz.desktop;
+sudo chmod +x /usr/share/applications/franz.desktop;
+cp /usr/share/applications/franz.desktop  ~/Área\ de\ Trabalho/;
+clear;
+echo "Instalando o Java";
+sudo mkdir /usr/lib/jvm;
+sudo tar zxvf /home/$USER/Downloads/jre-linux.tar.gz -C /usr/lib/jvm;
+sudo mv /usr/lib/jvm/jre*/ /usr/lib/jvm/jre;
+sudo ln -s /usr/lib/jvm/jre /usr/lib/jvm/java-oracle;
+sudo cp -a /etc/profile /etc/profile.original;
+clear;
+echo "Inalatando SSH";
+sudo apt-get install openssh-server -y;
+sudo /etc/init.d/ssh stop;
+sudo /etc/init.d/ssh start;
+clear;
+echo "Instalando o Google Chrome";
+sudo dpkg -i /home/$USER/Downloads/google-chrome-stable_current_amd64.deb;
+sudo apt-get install -f;
+sudo apt autoremove -y;
+sudo apt-get clean;
+sudo apt-get update -y;
+sudo ln -s /usr/lib/jvm/java-oracle/lib/amd64/libnpjp2.so /opt/google/chrome/libnpjp2.so;
+sudo ln -s /usr/lib/jvm/java-oracle/lib/amd64/libnpjp2.so /usr/lib/mozilla/plugins/libnpjp2.so;
+#Instalando Wine
+clear;
+sudo chmod -R 777 /home/$USER/Downloads/;
+sudo rm -r /home/$USER/nbs;
+sudo apt remove wine2* winehq-stable  libwine* fonts-wine* wine-mono0.0.8 wine-gecko2.21 -y;
+sudo apt remove gedit -y;
+sudo apt autoremove;
+mkdir /home/$USER/nbs;
+mkdir /home/$USER/bin/;
+cd;
+#setando variaveis sistema
+echo "export WINEPREFIX=/home/$USER/nbs" >> /home/$USER/.profile;
+echo "export WINEARCH=win32" >> /home/$USER/.profile;
+echo "JAVA_HOME=/usr/lib/jvm/java-oracle/" >> /home/$USER/.profile;
+echo "PATH=$JAVA_HOME/bin:$PATH export PATH JAVA_HOME" >> /home/$USER/.profile;
+echo "CLASSPATH=$JAVA_HOME/lib/tools.jar" >> /home/$USER/.profile;
+echo "CLASSPATH=.:$CLASSPATH" >> /home/$USER/.profile;
+echo "export  JAVA_HOME  PATH  CLASSPATH" >> /home/$USER/.profile;
+source /home/$USER/.profile;
+echo $WINEARCH;
+echo "Confira se Variavel esta setada para win32, caso contrário rode source /home/$USER/.profile";
+
